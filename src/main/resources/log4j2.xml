@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info" name="cluster-perf" monitorInterval="10">
+    <Properties>
+        <Property name="pattern-jgroups">%highlight{%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=black, DEBUG=green bold, TRACE=blue}</Property>
+        <Property name="pattern-infinispan">%highlight{%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n}{FATAL=red blink, ERROR=red, WARN=cyan, INFO=cyan, DEBUG=cyan, TRACE=cyan}</Property>
+        <Property name="dir">${log.dir}</Property>
+    </Properties>
+    <Appenders>
+        <Console name="console-jgroups" target="SYSTEM_OUT">
+            <PatternLayout pattern="${pattern-jgroups}" />
+        </Console>
+        <Console name="console-infinispan" target="SYSTEM_OUT">
+            <PatternLayout pattern="${pattern-infinispan}" />
+        </Console>
+        <!--RollingRandomAccessFile name="file" fileName="${dir}/cluster-perf.log" filePattern="${dir}/cluster-perf-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${pattern}" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="200 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="40"/>
+        </RollingRandomAccessFile-->
+    </Appenders>
+    <Loggers>
+        <Root level="off" />
+        <Logger name="org.jgroups" level="debug">
+            <AppenderRef ref="console-jgroups" />
+        </Logger>
+        <Logger name="org.infinispan" level="debug">
+            <AppenderRef ref="console-infinispan" />
+        </Logger>
+    </Loggers>
+</Configuration>
