@@ -11,7 +11,7 @@ public enum Type {
     SET_CONFIG,
     GET_REPL_CACHE_CONTENT,
     GET_DIST_CACHE_CONTENT,
-    GET_CACHE_CONTENT_RESPONSE,     // Map<Integer,byte[]>
-    QUIT_ALL,
-    RESULTS;             // Results
+    GET_CACHE_CONTENT_RESPONSE,
+    RESULTS,
+    QUIT_ALL;
 }

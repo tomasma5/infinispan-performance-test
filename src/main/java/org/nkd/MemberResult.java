@@ -47,11 +47,11 @@ public class MemberResult implements Streamable {
     public String toString() {
         long total_reqs = numGets + numPuts;
         double total_reqs_per_sec = total_reqs / (time / 1000.0);
-        return String.format("%,.2f reqs/sec (%,d GETs, %,d PUTs), avg RTT (us) = %,.2f get, %,.2f put",
+        return String.format("%.2f reqs/sec (%d GETs, %d PUTs), avg RTT (us) = %.2f get, %.2f put",
                 total_reqs_per_sec, numGets, numPuts, getAvg.getMean(), putAvg.getMean());
     }
 
-    static void writeHistogram(Histogram histogram, DataOutput out) throws Exception {
+    private static void writeHistogram(Histogram histogram, DataOutput out) throws Exception {
         int size = histogram.getEstimatedFootprintInBytes();
         ByteBuffer buf = ByteBuffer.allocate(size);
         histogram.encodeIntoCompressedByteBuffer(buf, 9);
@@ -59,7 +59,7 @@ public class MemberResult implements Streamable {
         out.write(buf.array(), 0, buf.position());
     }
 
-    static Histogram readHistogram(DataInput in) throws Exception {
+    private static Histogram readHistogram(DataInput in) throws Exception {
         int len = in.readInt();
         byte[] array = new byte[len];
         in.readFully(array);

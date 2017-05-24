@@ -43,6 +43,7 @@ public class Test extends ReceiverAdapter {
             "\n[q]-Quit [X]-Quit all\n";
 
     public static void main(String[] args) {
+        Utils.redirectSysOutAndSysErrToLog();
         Utils.jGroupsIPV4Hack();
         ClassConfigurator.add((short) 11000, MemberResult.class);
 
@@ -72,7 +73,7 @@ public class Test extends ReceiverAdapter {
         controlChannel = new JChannel("control-channel.xml");
         controlChannel.setReceiver(this);
         controlChannel.connect("controlChannel");
-
+        Utils.setMemberForRedirectedStreams(controlChannel.getAddress().toString() + ": ");
         try {
             MBeanServer server = Util.getMBeanServer();
             JmxConfigurator.registerChannel(controlChannel, server, "controlChannel", controlChannel.getClusterName(), true);
@@ -305,7 +306,7 @@ public class Test extends ReceiverAdapter {
 
         long totalReqs = 0, total_time = 0, longest_time = 0;
         Histogram getAvg = null, putAvg = null;
-        System.out.println("\n======================= " + testType +" Results: ===========================");
+        System.out.println("\n======================= " + testType + " Results: ===========================");
         for (Map.Entry<Address, MemberResult> entry : results.getResults().entrySet()) {
             Address member = entry.getKey();
             MemberResult result = entry.getValue();
@@ -330,7 +331,7 @@ public class Test extends ReceiverAdapter {
         double reqsSecCluster = totalReqs / (longest_time / 1000.0);
         double throughput = reqsSecNode * cfg.valueSize;
         double throughputCluster = reqsSecCluster * cfg.valueSize;
-        System.out.println(Util.bold(String.format("\nThroughput: %,.0f reqs/sec/node (%s/sec) %,.0f reqs/sec/cluster (%s/sec)\nRoundtrip:  gets %s,\n            puts %s\n\n",
+        System.out.println(Util.bold(String.format("\nThroughput: %.2f reqs/sec/node (%s/sec) %.2f reqs/sec/cluster (%s/sec)\nRoundtrip:  gets %s,\n            puts %s\n\n",
                 reqsSecNode, Util.printBytes(throughput), reqsSecCluster, Util.printBytes(throughputCluster),
                 Utils.print(getAvg), Utils.print(putAvg))));
     }

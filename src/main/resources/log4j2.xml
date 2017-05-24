@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="info" name="cluster-perf" monitorInterval="10">
-    <Properties>
-        <Property name="pattern-jgroups">%highlight{%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=black, DEBUG=green bold, TRACE=blue}</Property>
-        <Property name="pattern-infinispan">%highlight{%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n}{FATAL=red blink, ERROR=red, WARN=cyan, INFO=cyan, DEBUG=cyan, TRACE=cyan}</Property>
-        <Property name="dir">${log.dir}</Property>
-    </Properties>
     <Appenders>
         <Console name="console-jgroups" target="SYSTEM_OUT">
-            <PatternLayout pattern="${pattern-jgroups}" />
+            <PatternLayout pattern="%highlight{%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=black, DEBUG=yellow, TRACE=blue}"/>
         </Console>
         <Console name="console-infinispan" target="SYSTEM_OUT">
-            <PatternLayout pattern="${pattern-infinispan}" />
+            <PatternLayout pattern="%highlight{%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n}{FATAL=red blink, ERROR=red, WARN=cyan, INFO=cyan, DEBUG=cyan, TRACE=cyan}"/>
         </Console>
-        <!--RollingRandomAccessFile name="file" fileName="${dir}/cluster-perf.log" filePattern="${dir}/cluster-perf-%d{yyyy-MM-dd}-%i.log.gz">
-            <PatternLayout pattern="${pattern}" />
-            <Policies>
-                <SizeBasedTriggeringPolicy size="200 MB"/>
-            </Policies>
-            <DefaultRolloverStrategy max="40"/>
-        </RollingRandomAccessFile-->
+        <Console name="console-test" target="SYSTEM_OUT">
+            <PatternLayout pattern="%highlight{%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n}{ERROR=red, INFO=normal1 bold}"/>
+        </Console>
+        <File name="file" fileName="test.log">
+            <PatternLayout>
+                <Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</Pattern>
+            </PatternLayout>
+        </File>
+
     </Appenders>
     <Loggers>
         <Root level="off" />
-        <Logger name="org.jgroups" level="debug">
+        <Logger name="org.jgroups" level="warn">
             <AppenderRef ref="console-jgroups" />
+            <AppenderRef ref="file"/>
         </Logger>
-        <Logger name="org.infinispan" level="debug">
+        <Logger name="org.infinispan" level="warn">
             <AppenderRef ref="console-infinispan" />
+            <AppenderRef ref="file"/>
+        </Logger>
+        <Logger name="org.nkd" level="info">
+            <AppenderRef ref="console-test"/>
+            <AppenderRef ref="file"/>
         </Logger>
     </Loggers>
 </Configuration>
